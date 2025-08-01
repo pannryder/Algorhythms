@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 void  AIForGames::NodeMap::Initialise(std::vector<std::string> asciiMap, int cellSize)
 {
@@ -124,9 +125,13 @@ std::vector<AIForGames::Node*> AIForGames::dijkstrasSearch(Node* startNode, Node
     startNode->gScore = 0;
     startNode->previous = nullptr;
 
-    std::vector<Node> openList;
-    std::vector<Node> closedList;
+    std::vector<Node*> openList;
+    std::vector<Node*> closedList;
 
+    openList.push_back(startNode);
 
+    while (!openList.empty()) {
+        
+    }
 
 }
