@@ -1,5 +1,5 @@
 #pragma once
-
+#include "raylib.h"
 #include <glm/glm.hpp>
 #include <iostream>
 #include <string>
@@ -8,7 +8,7 @@
 namespace AIForGames
 {
     struct Node;
-
+    void DrawPath(std::vector<Node*> mapPath, Color lineColor);
     std::vector<Node*> dijkstrasSearch(Node* startNode,Node* endNode);
 
     struct Edge {
@@ -31,13 +31,17 @@ namespace AIForGames
     {
         int m_width, m_height;
         float m_cellSize;
-
         Node** m_nodes;
 
     public:
         void Initialise(std::vector<std::string> asciiMap, int cellSize);
         Node* GetNode(int x, int y) { return m_nodes[x + m_width * y]; };
+        Node* GetClosestNode(glm::vec2 worldPos);
         void Draw();
     };
+
+
 }
+
+
 
