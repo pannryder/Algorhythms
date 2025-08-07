@@ -10,6 +10,7 @@ namespace AIForGames
     struct Node;
     void DrawPath(std::vector<Node*> mapPath, Color lineColor);
     std::vector<Node*> dijkstrasSearch(Node* startNode,Node* endNode);
+    std::vector<Node*> AStarSearch(Node* startNode, Node* endNode);
 
     struct Edge {
         Node* target;
@@ -22,6 +23,8 @@ namespace AIForGames
         Node(float x, float y) : position{ x, y } {};
         glm::vec2 position;
         float gScore;
+        float hScore;
+        float fScore;
         Node* previous;
         std::vector<Edge> connections;
         void ConnectTo(Node* other, float cost);
@@ -33,7 +36,7 @@ namespace AIForGames
         Node** m_nodes;
 
     public:
-        void Initialise(std::vector<std::string> asciiMap, int cellSize);
+        void Initialise(std::vector<std::string> asciiMap, const float cellSize);
         Node* GetNode(int x, int y) { return m_nodes[x + m_width * y]; };
         Node* GetClosestNode(glm::vec2 worldPos);
         void Draw();
