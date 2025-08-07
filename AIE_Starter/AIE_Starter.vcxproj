@@ -24,6 +24,7 @@
     <ProjectGuid>{35c65e10-eed3-4687-9e88-2e1d54bcb977}</ProjectGuid>
     <RootNamespace>AIEStarter</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Algorhythmns</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -139,7 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AIE_Starter.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
   </ItemGroup>
   <ItemGroup>
