@@ -77,18 +77,6 @@ void  AIForGames::NodeMap::Initialise(std::vector<std::string> asciiMap, int cel
 
 void AIForGames::NodeMap::Draw()
 {
-    // red color for the blocks
-    Color cellColor;
-    cellColor.a = 255;
-    cellColor.r = 255;
-    cellColor.g = 0;
-    cellColor.b = 0;
-    Color lineColor;
-    lineColor.a = 255;
-    lineColor.r = 0;
-    lineColor.g = 0;
-    lineColor.b = 0;
-
     for (int y = 0; y < m_height; y++)
     {
         for (int x = 0; x < m_width; x++)
@@ -98,7 +86,7 @@ void AIForGames::NodeMap::Draw()
             {
                 // draw a solid block in empty squares without a navigation node
                 DrawRectangle(x * m_cellSize, y * m_cellSize,
-                    m_cellSize - 1, m_cellSize - 1, cellColor);
+                    m_cellSize - 1, m_cellSize - 1, DARKGREEN);
             }
             else
             {
@@ -108,7 +96,7 @@ void AIForGames::NodeMap::Draw()
                     Node* other = node->connections[i].target;
                     DrawLine((x + 0.5f) * m_cellSize, (y + 0.5f) * m_cellSize,
                         (int)other->position.x, (int)other->position.y,
-                        lineColor);
+                        BLACK);
                 }
             }
         }
@@ -185,4 +173,55 @@ void AIForGames::DrawPath(std::vector<Node*> mapPath, Color lineColor)
         DrawLine(mapPath[i]->position.x, mapPath[i]->position.y,mapPath[i - 1]->position.x, mapPath[i - 1]->position.y, lineColor);
     }
 
+}
+
+void AIForGames::PathAgent::Update(float deltaTime)
+{
+    if (m_path.empty()) {
+        return;
+    }
+    float distance = glm::distance(m_currentNode->position, m_position);
+    glm::vec2 vecDist = m_currentNode->position - m_position;
+    glm::vec2 vecUnit = glm::normalize(vecDist);
+    distance = distance - (m_speed * deltaTime);
+    if (distance > 0) {
+        m_position = m_position + (m_speed * deltaTime * vecUnit);
+    }
+    else {
+        ++m_currentIndex;
+        m_position = m_currentNode->position;
+        if (m_currentNode == m_path.back()) {
+            m_path.clear();
+        }
+        else {
+            m_currentNode = m_path[m_currentIndex];
+            vecDist = m_currentNode->position - m_position;
+            vecUnit = glm::normalize(vecDist);
+            m_position = m_position - (distance * vecUnit);
+        }
+    }
+}
+
+void AIForGames::PathAgent::GoToNode(Node* node)
+{
+    m_path = dijkstrasSearch(m_currentNode, node);
+    m_currentIndex = 0;
+}
+
+void AIForGames::PathAgent::SetNode(Node* node)
+{
+    if (node != nullptr) {
+        m_currentNode = node;
+        m_position = node->position;
+    }
+}
+
+void AIForGames::PathAgent::SetSpeed(float speed)
+{
+    m_speed = speed;
+}
+
+void AIForGames::PathAgent::Draw()
+{
+    DrawCircle((int)m_position.x, (int)m_position.y, 8, BROWN);
 }

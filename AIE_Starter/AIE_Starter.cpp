@@ -43,20 +43,32 @@ int main(int argc, char* argv[])
 
     NodeMap nodeMap;
     std::vector<std::string> asciiMap;
-    asciiMap.push_back("000000000000");
-    asciiMap.push_back("010111011100");
-    asciiMap.push_back("010101110110");
-    asciiMap.push_back("010100010000");
-    asciiMap.push_back("010111111110");
-    asciiMap.push_back("010010001000");
-    asciiMap.push_back("011111111010");
-    asciiMap.push_back("000000000000");
+    asciiMap.push_back("0000000000000000000000000");
+    asciiMap.push_back("0101110111000111000001110");
+    asciiMap.push_back("0101011101110001111111010");
+    asciiMap.push_back("0101000100000000010001000");
+    asciiMap.push_back("0101111111111111010001110");
+    asciiMap.push_back("0100100010000000011101010");
+    asciiMap.push_back("0111111111111110001001010");
+    asciiMap.push_back("0000010000000000000001000");
+    asciiMap.push_back("0111111111110011111111010");
+    asciiMap.push_back("0010000010001000000001010");
+    asciiMap.push_back("0111000011101111111101110");
+    asciiMap.push_back("0101111000100000000100010");
+    asciiMap.push_back("0100101111111111111111110");
+    asciiMap.push_back("0000000000000000000000000");
     nodeMap.Initialise(asciiMap,32);
 
     Node* start = nodeMap.GetNode(1, 1);
     Node* end = nodeMap.GetNode(10, 2);
     std::vector<Node*> nodeMapPath = dijkstrasSearch(start, end);
-    Color lineColor = { 255, 255, 255, 255 };
+
+    PathAgent agent;
+    agent.SetNode(start);
+    agent.SetSpeed(500);
+
+    float time = (float)GetTime();
+    float deltaTime;
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -64,28 +76,35 @@ int main(int argc, char* argv[])
         // Update
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
+        float fTime = (float)GetTime();
+        deltaTime = fTime - time;
+        time = fTime;
+
+        agent.Update(deltaTime);
+
         if (IsMouseButtonPressed(0))
         {
             Vector2 mousePos = GetMousePosition();
-            start = nodeMap.GetClosestNode(glm::vec2(mousePos.x, mousePos.y));
-            nodeMapPath = dijkstrasSearch(start, end);
+            Node* end = nodeMap.GetClosestNode(glm::vec2(mousePos.x, mousePos.y));
+            agent.GoToNode(end);
         }
-        if (IsMouseButtonPressed(1))
-        {
-            Vector2 mousePos = GetMousePosition();
-            end = nodeMap.GetClosestNode(glm::vec2(mousePos.x, mousePos.y));
-            nodeMapPath = dijkstrasSearch(start, end);
-        }
+        //if (IsMouseButtonPressed(1))
+        //{
+        //    Vector2 mousePos = GetMousePosition();
+        //    end = nodeMap.GetClosestNode(glm::vec2(mousePos.x, mousePos.y));
+        //    nodeMapPath = dijkstrasSearch(start, end);
+        //}
         //----------------------------------------------------------------------------------
 
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
 
-        ClearBackground(DARKGRAY);
+        ClearBackground(LIGHTGRAY);
 
         nodeMap.Draw();
-        DrawPath(nodeMapPath, lineColor);
+        DrawPath(agent.m_path, YELLOW);
+        agent.Draw();
 
         EndDrawing();
         //----------------------------------------------------------------------------------

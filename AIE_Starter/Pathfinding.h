@@ -27,8 +27,7 @@ namespace AIForGames
         void ConnectTo(Node* other, float cost);
     };
 
-    class NodeMap
-    {
+    class NodeMap {
         int m_width, m_height;
         float m_cellSize;
         Node** m_nodes;
@@ -40,6 +39,21 @@ namespace AIForGames
         void Draw();
     };
 
+    class PathAgent {
+    private:
+        glm::vec2 m_position;
+        int m_currentIndex;
+        Node* m_currentNode;
+        float m_speed;
+
+    public:
+        std::vector<Node*> m_path;
+        void Update(float deltaTime);
+        void GoToNode(Node* node);
+        void SetNode(Node* node);
+        void SetSpeed(float speed);
+        void Draw();
+    };
 
 }
 
