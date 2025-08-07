@@ -268,7 +268,8 @@ void AIForGames::PathAgent::Update(float deltaTime)
 
 void AIForGames::PathAgent::GoToNode(Node* node)
 {
-    m_path = AStarSearch(m_currentNode, node);
+    //m_path = AStarSearch(m_currentNode, node);
+    m_path = dijkstrasSearch(m_currentNode, node);
     m_currentIndex = 0;
 }
 
