@@ -45,13 +45,13 @@ int main(int argc, char* argv[])
     asciiMap.push_back("0101011101110001111111010");
     asciiMap.push_back("0101000100000000010001000");
     asciiMap.push_back("0101111111111111010001110");
-    asciiMap.push_back("0100100010000000011101010");
+    asciiMap.push_back("0100100010000000011111010");
     asciiMap.push_back("0111111111111110001001010");
-    asciiMap.push_back("0000010000000000000001000");
-    asciiMap.push_back("0111111111110011111111010");
+    asciiMap.push_back("0010010000000010000001000");
+    asciiMap.push_back("0111111111111011111111010");
     asciiMap.push_back("0010000010001000000001010");
     asciiMap.push_back("0111000011101111111101110");
-    asciiMap.push_back("0101111000100000000100010");
+    asciiMap.push_back("0101111000100100000100010");
     asciiMap.push_back("0100101111111111111111110");
     asciiMap.push_back("0000000000000000000000000");
     nodeMap.Initialise(asciiMap,32);

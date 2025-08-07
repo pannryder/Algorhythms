@@ -20,7 +20,7 @@ namespace AIForGames
     };
 
     struct Node {
-        Node(float x, float y) : position{ x, y } {};
+        Node(float x, float y) : position{ x, y }, gScore{}, hScore{}, fScore{}, previous{} {};
         glm::vec2 position;
         float gScore;
         float hScore;
