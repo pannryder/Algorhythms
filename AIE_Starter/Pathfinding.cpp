@@ -290,3 +290,40 @@ void AIForGames::PathAgent::Draw()
 {
     DrawCircle((int)m_position.x, (int)m_position.y, 8, BROWN);
 }
+
+void AIForGames::Agent::Update(float deltaTime)
+{
+    if (m_current)
+        m_current->Update(this, deltaTime);
+    m_pathAgent.Update(deltaTime);
+}
+
+void AIForGames::Agent::Draw()
+{
+    m_pathAgent.Draw();
+}
+
+void AIForGames::Agent::GoTo(glm::vec2 point)
+{
+    Node* end = m_nodeMap->GetClosestNode(point);
+    m_pathAgent.GoToNode(end);
+}
+
+void AIForGames::Agent::SetNode(Node* node)
+{
+    m_pathAgent.SetNode(node);
+}
+
+std::vector<AIForGames::Node*> AIForGames::Agent::GetPath()
+{
+    return m_pathAgent.m_path;
+}
+
+void AIForGames::GotoPointBehaviour::Update(Agent* agent, float deltaTime)
+{
+    if (IsMouseButtonPressed(0))
+    {
+        Vector2 mousePos = GetMousePosition();
+        agent->GoTo(glm::vec2(mousePos.x, mousePos.y));
+    }
+}

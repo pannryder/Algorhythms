@@ -61,9 +61,12 @@ int main(int argc, char* argv[])
     std::vector<Node*> nodeMapPath = dijkstrasSearch(start, end);
     //std::vector<Node*> nodeMapPath = AStarSearch(start, end);
 
-    PathAgent agent;
+    //PathAgent agent;
+    //agent.SetNode(start);
+    //agent.SetSpeed(500);
+
+    Agent agent(&nodeMap, new GotoPointBehaviour());
     agent.SetNode(start);
-    agent.SetSpeed(500);
 
     float time = (float)GetTime();
     float deltaTime;
@@ -80,12 +83,13 @@ int main(int argc, char* argv[])
 
         agent.Update(deltaTime);
 
-        if (IsMouseButtonPressed(0))
-        {
-            Vector2 mousePos = GetMousePosition();
-            Node* end = nodeMap.GetClosestNode(glm::vec2(mousePos.x, mousePos.y));
-            agent.GoToNode(end);
-        }
+        //if (IsMouseButtonPressed(0))
+        //{
+        //    Vector2 mousePos = GetMousePosition();
+        //    Node* end = nodeMap.GetClosestNode(glm::vec2(mousePos.x, mousePos.y));
+        //    agent.GoToNode(end);
+        //}
+        // 
         //if (IsMouseButtonPressed(1))
         //{
         //    Vector2 mousePos = GetMousePosition();
@@ -101,7 +105,7 @@ int main(int argc, char* argv[])
         ClearBackground(LIGHTGRAY);
 
         nodeMap.Draw();
-        DrawPath(agent.m_path, YELLOW);
+        DrawPath(agent.GetPath(), YELLOW);
         agent.Draw();
 
         EndDrawing();

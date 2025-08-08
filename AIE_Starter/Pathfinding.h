@@ -58,6 +58,33 @@ namespace AIForGames
         void Draw();
     };
 
+    class Agent {
+    private:
+        PathAgent m_pathAgent;
+        Behaviour* m_current;
+        NodeMap* m_nodeMap;
+        Color m_color;
+    public:
+        Agent() {};
+        Agent(NodeMap* _nodeMap, Behaviour* _behaviour) : m_current(_behaviour), m_nodeMap(_nodeMap), m_color(BROWN) {};
+        ~Agent() { delete m_current; };
+        void Update(float deltaTime);
+        void Draw();
+        void GoTo(glm::vec2 point);
+        void SetNode(Node* node);
+        std::vector<Node*> GetPath();
+    };
+
+    class Behaviour {
+    public:
+        virtual void Update(Agent* agent, float deltaTime) = 0;
+    };
+
+    class GotoPointBehaviour : public Behaviour {
+    public:
+        virtual void Update(Agent* agent, float deltaTime);
+    };
+
 }
 
 
