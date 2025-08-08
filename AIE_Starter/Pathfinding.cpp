@@ -13,6 +13,11 @@ AIForGames::Node* AIForGames::NodeMap::GetClosestNode(glm::vec2 worldPos)
     return GetNode(i,j);
 }
 
+AIForGames::NodeMap::~NodeMap()
+{
+    delete m_nodes;
+}
+
 void  AIForGames::NodeMap::Initialise(std::vector<std::string> asciiMap, const float cellSize)
 {
     m_cellSize = cellSize;
@@ -198,7 +203,7 @@ std::vector<AIForGames::Node*> AIForGames::AStarSearch(Node* startNode, Node* en
             ;
             if (std::find(closedList.begin(), closedList.end(), c.target) == closedList.end()) {
                 float gScore = currentNode->gScore + c.cost;
-                float hScore = glm::distance(c.target->position,endNode->position);
+                float hScore = Heuristic(c.target,endNode);
                 float fScore = gScore + hScore;
 
                 if (std::find(openList.begin(), openList.end(), c.target) == openList.end()) {
@@ -213,7 +218,6 @@ std::vector<AIForGames::Node*> AIForGames::AStarSearch(Node* startNode, Node* en
                     c.target->previous = currentNode;
                 }
             }
-
         }
     }
 
@@ -229,6 +233,11 @@ std::vector<AIForGames::Node*> AIForGames::AStarSearch(Node* startNode, Node* en
         currentNode = currentNode->previous;
     }
     return Path;
+}
+
+float AIForGames::Heuristic(Node* a, Node* b)
+{
+    return glm::distance(a->position,b->position);
 }
 
 void AIForGames::DrawPath(std::vector<Node*> mapPath, Color lineColor)
@@ -268,8 +277,8 @@ void AIForGames::PathAgent::Update(float deltaTime)
 
 void AIForGames::PathAgent::GoToNode(Node* node)
 {
-    //m_path = AStarSearch(m_currentNode, node);
-    m_path = dijkstrasSearch(m_currentNode, node);
+    m_path = AStarSearch(m_currentNode, node);
+    //m_path = dijkstrasSearch(m_currentNode, node);
     m_currentIndex = 0;
 }
 

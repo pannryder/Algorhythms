@@ -11,6 +11,7 @@ namespace AIForGames
     void DrawPath(std::vector<Node*> mapPath, Color lineColor);
     std::vector<Node*> dijkstrasSearch(Node* startNode,Node* endNode);
     std::vector<Node*> AStarSearch(Node* startNode, Node* endNode);
+    float Heuristic(Node* a, Node* b);
 
     struct Edge {
         Node* target;
@@ -36,6 +37,7 @@ namespace AIForGames
         Node** m_nodes;
 
     public:
+        ~NodeMap();
         void Initialise(std::vector<std::string> asciiMap, const float cellSize);
         Node* GetNode(int x, int y) { return m_nodes[x + m_width * y]; };
         Node* GetClosestNode(glm::vec2 worldPos);
