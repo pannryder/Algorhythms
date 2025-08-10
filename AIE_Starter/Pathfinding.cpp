@@ -15,7 +15,15 @@ AIForGames::Node* AIForGames::NodeMap::GetClosestNode(glm::vec2 worldPos)
 
 AIForGames::NodeMap::~NodeMap()
 {
-    delete m_nodes;
+    if (m_nodes)
+    {
+        for (int i = 0; i < m_width * m_height; i++)
+        {
+            delete m_nodes[i];
+        }
+        delete[] m_nodes;
+        m_nodes = nullptr;
+    }
 }
 
 void  AIForGames::NodeMap::Initialise(std::vector<std::string> asciiMap, const float cellSize)
@@ -63,8 +71,8 @@ void  AIForGames::NodeMap::Initialise(std::vector<std::string> asciiMap, const f
                 Node* nodeWest = x == 0 ? nullptr : GetNode(x - 1, y);
                 if (nodeWest)
                 {
-                    node->ConnectTo(nodeWest, 1); // TODO weights
-                    nodeWest->ConnectTo(node, 1);
+                    node->ConnectTo(nodeWest, glm::distance(node->position, nodeWest->position)); // TODO weights
+                    nodeWest->ConnectTo(node, glm::distance(node->position, nodeWest->position));
                 }
 
                 // see if there's a node south of us, checking for array index
@@ -72,8 +80,8 @@ void  AIForGames::NodeMap::Initialise(std::vector<std::string> asciiMap, const f
                 Node* nodeSouth = y == 0 ? nullptr : GetNode(x, y - 1);
                 if (nodeSouth)
                 {
-                    node->ConnectTo(nodeSouth, 1);
-                    nodeSouth->ConnectTo(node, 1);
+                    node->ConnectTo(nodeSouth, glm::distance(node->position, nodeSouth->position));
+                    nodeSouth->ConnectTo(node, glm::distance(node->position, nodeSouth->position));
                 }
             }
         }
@@ -96,12 +104,10 @@ void AIForGames::NodeMap::Draw()
             else
             {
                 // draw the connections between the node and its neighbours
-                for (int i = 0; i < node->connections.size(); i++)
-                {
+                for (size_t i = 0; i < node->connections.size(); i++) {
                     Node* other = node->connections[i].target;
-                    DrawLine((x + 0.5f) * m_cellSize, (y + 0.5f) * m_cellSize,
-                        (int)other->position.x, (int)other->position.y,
-                        BLACK);
+                    DrawLine((int)((x + 0.5f) * m_cellSize), (int)((y + 0.5f) * m_cellSize),
+                        (int)other->position.x, (int)other->position.y, BLACK);
                 }
             }
         }
@@ -242,10 +248,10 @@ float AIForGames::Heuristic(Node* a, Node* b)
 
 void AIForGames::DrawPath(std::vector<Node*> mapPath, Color lineColor)
 {
-    for (int i = 1; i < mapPath.size(); i++) {
-        DrawLine(mapPath[i]->position.x, mapPath[i]->position.y,mapPath[i - 1]->position.x, mapPath[i - 1]->position.y, lineColor);
+    for (size_t i = 1; i < mapPath.size(); i++) {
+        DrawLine((int)mapPath[i]->position.x, (int)mapPath[i]->position.y,
+            (int)mapPath[i - 1]->position.x, (int)mapPath[i - 1]->position.y, lineColor);
     }
-
 }
 
 void AIForGames::PathAgent::Update(float deltaTime)

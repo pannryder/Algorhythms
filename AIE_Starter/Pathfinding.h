@@ -37,6 +37,7 @@ namespace AIForGames
         Node** m_nodes;
 
     public:
+        NodeMap() : m_width(0), m_height(0), m_cellSize(0), m_nodes(nullptr) {}
         ~NodeMap();
         void Initialise(std::vector<std::string> asciiMap, const float cellSize);
         Node* GetNode(int x, int y) { return m_nodes[x + m_width * y]; };
