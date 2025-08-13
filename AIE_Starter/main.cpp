@@ -22,9 +22,12 @@
 #include "raylib.h"
 
 #include "Pathfinding.h"
+#include "NodeMap.h"
+#include "Node.h"
+#include "Agent.h"
+#include "PathAgent.h"
+#include "GotoPointBehaviour.h"
 #include <string>
-
-using namespace AIForGames;
 
 int main(int argc, char* argv[])
 {
@@ -61,11 +64,11 @@ int main(int argc, char* argv[])
     //std::vector<Node*> nodeMapPath = dijkstrasSearch(start, end);
     std::vector<Node*> nodeMapPath = AStarSearch(start, end);
 
-    //PathAgent agent;
-    //agent.SetNode(start);
-    //agent.SetSpeed(500);
+    PathAgent agent;
+    agent.SetNode(start);
+    agent.SetSpeed(500);
 
-    Agent agent(&nodeMap, new GotoPointBehaviour());
+    //Agent agent(&nodeMap, new GotoPointBehaviour());
     agent.SetNode(start);
 
     float time = (float)GetTime();
@@ -76,26 +79,20 @@ int main(int argc, char* argv[])
     {
         // Update
         //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
+
         float fTime = (float)GetTime();
         deltaTime = fTime - time;
         time = fTime;
 
         agent.Update(deltaTime);
 
-        //if (IsMouseButtonPressed(0))
-        //{
-        //    Vector2 mousePos = GetMousePosition();
-        //    Node* end = nodeMap.GetClosestNode(glm::vec2(mousePos.x, mousePos.y));
-        //    agent.GoToNode(end);
-        //}
-        // 
-        //if (IsMouseButtonPressed(1))
-        //{
-        //    Vector2 mousePos = GetMousePosition();
-        //    end = nodeMap.GetClosestNode(glm::vec2(mousePos.x, mousePos.y));
-        //    nodeMapPath = dijkstrasSearch(start, end);
-        //}
+        if (IsMouseButtonPressed(0))
+        {
+            Vector2 mousePos = GetMousePosition();
+            Node* end = nodeMap.GetClosestNode(glm::vec2(mousePos.x, mousePos.y));
+            agent.GoToNode(end);
+        }
+
         //----------------------------------------------------------------------------------
 
         // Draw
@@ -105,7 +102,8 @@ int main(int argc, char* argv[])
         ClearBackground(LIGHTGRAY);
 
         nodeMap.Draw();
-        DrawPath(agent.GetPath(), YELLOW);
+        //DrawPath(agent.GetPath(), YELLOW);
+        DrawPath(agent.m_path, YELLOW);
         agent.Draw();
 
         EndDrawing();

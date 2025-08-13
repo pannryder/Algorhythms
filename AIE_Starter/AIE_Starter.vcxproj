@@ -140,13 +140,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Agent.cpp" />
+    <ClCompile Include="GotoPointBehaviour.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="NodeMap.cpp" />
+    <ClCompile Include="PathAgent.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Agent.h" />
+    <ClInclude Include="Behaviour.h" />
+    <ClInclude Include="Edge.h" />
+    <ClInclude Include="GotoPointBehaviour.h" />
+    <ClInclude Include="Node.h" />
+    <ClInclude Include="NodeMap.h" />
+    <ClInclude Include="PathAgent.h" />
     <ClInclude Include="Pathfinding.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
