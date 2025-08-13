@@ -14,4 +14,6 @@ public:
     Node* GetNode(int x, int y) { return m_nodes[x + m_width * y]; };
     Node* GetClosestNode(glm::vec2 worldPos);
     void Draw();
+    Node* GetRandomNode();
+    float GetCellSize();
 };

@@ -141,12 +141,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Agent.cpp" />
+    <ClCompile Include="FiniteStateMachine.cpp" />
+    <ClCompile Include="FollowBehaviour.cpp" />
     <ClCompile Include="GotoPointBehaviour.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NodeMap.cpp" />
     <ClCompile Include="PathAgent.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
+    <ClCompile Include="SelectorBehaviour.cpp" />
+    <ClCompile Include="WanderBehaviour.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -155,11 +159,15 @@
     <ClInclude Include="Agent.h" />
     <ClInclude Include="Behaviour.h" />
     <ClInclude Include="Edge.h" />
+    <ClInclude Include="FiniteStateMachine.h" />
+    <ClInclude Include="FollowBehaviour.h" />
     <ClInclude Include="GotoPointBehaviour.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeMap.h" />
     <ClInclude Include="PathAgent.h" />
     <ClInclude Include="Pathfinding.h" />
+    <ClInclude Include="SelectorBehaviour.h" />
+    <ClInclude Include="WanderBehaviour.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

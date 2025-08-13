@@ -27,6 +27,9 @@
 #include "Agent.h"
 #include "PathAgent.h"
 #include "GotoPointBehaviour.h"
+#include "WanderBehaviour.h"
+#include "FollowBehaviour.h"
+#include "SelectorBehaviour.h"
 #include <string>
 
 int main(int argc, char* argv[])
@@ -45,17 +48,17 @@ int main(int argc, char* argv[])
     std::vector<std::string> asciiMap;
     asciiMap.push_back("0000000000000000000000000");
     asciiMap.push_back("0101110111000111000001110");
-    asciiMap.push_back("0101011101110001111111010");
-    asciiMap.push_back("0101000100000000010001000");
+    asciiMap.push_back("0101011101110101111111010");
+    asciiMap.push_back("0101000100000100010001010");
     asciiMap.push_back("0101111111111111010001110");
     asciiMap.push_back("0100100010000000011111010");
     asciiMap.push_back("0111111111111110001001010");
-    asciiMap.push_back("0010010000000010000001000");
+    asciiMap.push_back("0010010000000010001001000");
     asciiMap.push_back("0111111111111011111111010");
-    asciiMap.push_back("0010000010001000000001010");
+    asciiMap.push_back("0010000010001000010001010");
     asciiMap.push_back("0111000011101111111101110");
-    asciiMap.push_back("0101111000100100000100010");
-    asciiMap.push_back("0100101111111111111111110");
+    asciiMap.push_back("0101111010100100000100010");
+    asciiMap.push_back("0110101111111111111111110");
     asciiMap.push_back("0000000000000000000000000");
     nodeMap.Initialise(asciiMap,32);
 
@@ -64,12 +67,18 @@ int main(int argc, char* argv[])
     //std::vector<Node*> nodeMapPath = dijkstrasSearch(start, end);
     std::vector<Node*> nodeMapPath = AStarSearch(start, end);
 
-    PathAgent agent;
+    Agent agent(&nodeMap, new GotoPointBehaviour(), BROWN);
     agent.SetNode(start);
     agent.SetSpeed(500);
 
-    //Agent agent(&nodeMap, new GotoPointBehaviour());
-    agent.SetNode(start);
+    Agent agent2(&nodeMap, new WanderBehaviour(), ORANGE);
+    agent2.SetNode(nodeMap.GetRandomNode());
+    agent2.SetSpeed(300);
+
+    Agent agent3(&nodeMap, new SelectorBehaviour(new FollowBehaviour(), new WanderBehaviour()), PINK);
+    agent3.SetNode(nodeMap.GetRandomNode());
+    agent3.SetTarget(&agent2);
+    agent3.SetSpeed(200);
 
     float time = (float)GetTime();
     float deltaTime;
@@ -77,34 +86,30 @@ int main(int argc, char* argv[])
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        // Update
+        // Time
         //----------------------------------------------------------------------------------
 
         float fTime = (float)GetTime();
         deltaTime = fTime - time;
         time = fTime;
 
-        agent.Update(deltaTime);
-
-        if (IsMouseButtonPressed(0))
-        {
-            Vector2 mousePos = GetMousePosition();
-            Node* end = nodeMap.GetClosestNode(glm::vec2(mousePos.x, mousePos.y));
-            agent.GoToNode(end);
-        }
-
-        //----------------------------------------------------------------------------------
-
-        // Draw
+        // Draw & Update
         //----------------------------------------------------------------------------------
         BeginDrawing();
 
         ClearBackground(LIGHTGRAY);
 
         nodeMap.Draw();
-        //DrawPath(agent.GetPath(), YELLOW);
-        DrawPath(agent.m_path, YELLOW);
+        DrawPath(agent.GetPath(), YELLOW);
+        DrawPath(agent2.GetPath(), YELLOW);
+        DrawPath(agent3.GetPath(), YELLOW);
+        //DrawPath(agent.m_path, YELLOW);
+        agent.Update(deltaTime);
         agent.Draw();
+        agent2.Update(deltaTime);
+        agent2.Draw();
+        agent3.Update(deltaTime);
+        agent3.Draw();
 
         EndDrawing();
         //----------------------------------------------------------------------------------

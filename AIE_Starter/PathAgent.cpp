@@ -51,5 +51,25 @@ void PathAgent::SetSpeed(float speed)
 
 void PathAgent::Draw()
 {
-    DrawCircleV({ m_position.x, m_position.y }, 8, BROWN);
+    DrawCircleV({ m_position.x, m_position.y }, 8, m_color);
+}
+
+void PathAgent::SetColor(Color _color)
+{
+    m_color = _color;
+}
+
+std::vector<Node*> PathAgent::GetPath()
+{
+    return m_path;
+}
+
+glm::vec2 PathAgent::GetPosition()
+{
+    return m_position;
+}
+
+void PathAgent::Reset()
+{
+    m_path.clear();
 }

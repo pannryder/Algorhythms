@@ -21,7 +21,6 @@ NodeMap::~NodeMap()
             delete m_nodes[i];
         }
         delete[] m_nodes;
-        m_nodes = nullptr;
     }
 }
 
@@ -111,4 +110,21 @@ void NodeMap::Draw()
             }
         }
     }
+}
+
+Node* NodeMap::GetRandomNode()
+{
+    Node* node = nullptr;
+    while (node == nullptr)
+    {
+        int x = rand() % m_width;
+        int y = rand() % m_height;
+        node = GetNode(x, y);
+    }
+    return node;
+}
+
+float NodeMap::GetCellSize()
+{
+    return m_cellSize;
 }
