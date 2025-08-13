@@ -71,7 +71,7 @@ void  AIForGames::NodeMap::Initialise(std::vector<std::string> asciiMap, const f
                 Node* nodeWest = x == 0 ? nullptr : GetNode(x - 1, y);
                 if (nodeWest)
                 {
-                    node->ConnectTo(nodeWest, glm::distance(node->position, nodeWest->position)); // TODO weights
+                    node->ConnectTo(nodeWest, glm::distance(node->position, nodeWest->position)); 
                     nodeWest->ConnectTo(node, glm::distance(node->position, nodeWest->position));
                 }
 
@@ -98,16 +98,16 @@ void AIForGames::NodeMap::Draw()
             if (node == nullptr)
             {
                 // draw a solid block in empty squares without a navigation node
-                DrawRectangle(x * m_cellSize, y * m_cellSize,
-                    m_cellSize - 1, m_cellSize - 1, DARKGREEN);
+                DrawRectangleV({x * m_cellSize, y * m_cellSize},
+                    { m_cellSize - 1, m_cellSize - 1 }, DARKGREEN);
             }
             else
             {
                 // draw the connections between the node and its neighbours
                 for (size_t i = 0; i < node->connections.size(); i++) {
                     Node* other = node->connections[i].target;
-                    DrawLine((int)((x + 0.5f) * m_cellSize), (int)((y + 0.5f) * m_cellSize),
-                        (int)other->position.x, (int)other->position.y, BLACK);
+                    DrawLineV({ ((x + 0.5f) * m_cellSize), ((y + 0.5f) * m_cellSize) },
+                        { other->position.x, other->position.y }, BLACK);
                 }
             }
         }

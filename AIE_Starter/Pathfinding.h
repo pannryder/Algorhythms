@@ -32,7 +32,7 @@ namespace AIForGames
     };
 
     class NodeMap {
-        int m_width, m_height;
+        size_t m_width, m_height;
         float m_cellSize;
         Node** m_nodes;
 
