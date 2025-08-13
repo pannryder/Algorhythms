@@ -13,6 +13,19 @@ AIForGames::Node* AIForGames::NodeMap::GetClosestNode(glm::vec2 worldPos)
     return GetNode(i,j);
 }
 
+AIForGames::NodeMap::~NodeMap()
+{
+    if (m_nodes)
+    {
+        for (int i = 0; i < m_width * m_height; i++)
+        {
+            delete m_nodes[i];
+        }
+        delete[] m_nodes;
+        m_nodes = nullptr;
+    }
+}
+
 void  AIForGames::NodeMap::Initialise(std::vector<std::string> asciiMap, const float cellSize)
 {
     m_cellSize = cellSize;
@@ -58,8 +71,8 @@ void  AIForGames::NodeMap::Initialise(std::vector<std::string> asciiMap, const f
                 Node* nodeWest = x == 0 ? nullptr : GetNode(x - 1, y);
                 if (nodeWest)
                 {
-                    node->ConnectTo(nodeWest, 1); // TODO weights
-                    nodeWest->ConnectTo(node, 1);
+                    node->ConnectTo(nodeWest, glm::distance(node->position, nodeWest->position)); 
+                    nodeWest->ConnectTo(node, glm::distance(node->position, nodeWest->position));
                 }
 
                 // see if there's a node south of us, checking for array index
@@ -67,8 +80,8 @@ void  AIForGames::NodeMap::Initialise(std::vector<std::string> asciiMap, const f
                 Node* nodeSouth = y == 0 ? nullptr : GetNode(x, y - 1);
                 if (nodeSouth)
                 {
-                    node->ConnectTo(nodeSouth, 1);
-                    nodeSouth->ConnectTo(node, 1);
+                    node->ConnectTo(nodeSouth, glm::distance(node->position, nodeSouth->position));
+                    nodeSouth->ConnectTo(node, glm::distance(node->position, nodeSouth->position));
                 }
             }
         }
@@ -85,18 +98,16 @@ void AIForGames::NodeMap::Draw()
             if (node == nullptr)
             {
                 // draw a solid block in empty squares without a navigation node
-                DrawRectangle(x * m_cellSize, y * m_cellSize,
-                    m_cellSize - 1, m_cellSize - 1, DARKGREEN);
+                DrawRectangleV({x * m_cellSize, y * m_cellSize},
+                    { m_cellSize - 1, m_cellSize - 1 }, DARKGREEN);
             }
             else
             {
                 // draw the connections between the node and its neighbours
-                for (int i = 0; i < node->connections.size(); i++)
-                {
+                for (size_t i = 0; i < node->connections.size(); i++) {
                     Node* other = node->connections[i].target;
-                    DrawLine((x + 0.5f) * m_cellSize, (y + 0.5f) * m_cellSize,
-                        (int)other->position.x, (int)other->position.y,
-                        BLACK);
+                    DrawLineV({ ((x + 0.5f) * m_cellSize), ((y + 0.5f) * m_cellSize) },
+                        { other->position.x, other->position.y }, BLACK);
                 }
             }
         }
@@ -198,7 +209,7 @@ std::vector<AIForGames::Node*> AIForGames::AStarSearch(Node* startNode, Node* en
             ;
             if (std::find(closedList.begin(), closedList.end(), c.target) == closedList.end()) {
                 float gScore = currentNode->gScore + c.cost;
-                float hScore = glm::distance(c.target->position,endNode->position);
+                float hScore = Heuristic(c.target,endNode);
                 float fScore = gScore + hScore;
 
                 if (std::find(openList.begin(), openList.end(), c.target) == openList.end()) {
@@ -213,7 +224,6 @@ std::vector<AIForGames::Node*> AIForGames::AStarSearch(Node* startNode, Node* en
                     c.target->previous = currentNode;
                 }
             }
-
         }
     }
 
@@ -231,12 +241,17 @@ std::vector<AIForGames::Node*> AIForGames::AStarSearch(Node* startNode, Node* en
     return Path;
 }
 
+float AIForGames::Heuristic(Node* a, Node* b)
+{
+    return glm::distance(a->position,b->position);
+}
+
 void AIForGames::DrawPath(std::vector<Node*> mapPath, Color lineColor)
 {
-    for (int i = 1; i < mapPath.size(); i++) {
-        DrawLine(mapPath[i]->position.x, mapPath[i]->position.y,mapPath[i - 1]->position.x, mapPath[i - 1]->position.y, lineColor);
+    for (size_t i = 1; i < mapPath.size(); i++) {
+        DrawLine((int)mapPath[i]->position.x, (int)mapPath[i]->position.y,
+            (int)mapPath[i - 1]->position.x, (int)mapPath[i - 1]->position.y, lineColor);
     }
-
 }
 
 void AIForGames::PathAgent::Update(float deltaTime)
@@ -268,8 +283,8 @@ void AIForGames::PathAgent::Update(float deltaTime)
 
 void AIForGames::PathAgent::GoToNode(Node* node)
 {
-    //m_path = AStarSearch(m_currentNode, node);
-    m_path = dijkstrasSearch(m_currentNode, node);
+    m_path = AStarSearch(m_currentNode, node);
+    //m_path = dijkstrasSearch(m_currentNode, node);
     m_currentIndex = 0;
 }
 
