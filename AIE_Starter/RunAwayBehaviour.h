@@ -2,7 +2,7 @@
 #include "Behaviour.h"
 #include "Agent.h"
 
-class FollowBehaviour : public Behaviour {
+class RunAwayBehaviour : public Behaviour {
 private:
 	glm::vec2 lastTargetPosition;
 public:

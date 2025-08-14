@@ -2,8 +2,7 @@
 #include "Behaviour.h"
 #include "Agent.h"
 
-class WanderBehaviour : public Behaviour
-{
+class ThinkingBehaviour : public Behaviour {
 public:
     virtual void Update(Agent* agent, float deltaTime);
     void Enter(Agent* agent);

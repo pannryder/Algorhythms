@@ -8,7 +8,7 @@
 std::vector<Node*> dijkstrasSearch(Node* startNode, Node* endNode)
 {
     if (startNode == nullptr || endNode == nullptr){
-        std::cout << "startNode or endNode is NULL!!!!!!!!!" << std::endl;
+        //std::cout << "startNode or endNode is NULL!!!!!!!!!" << std::endl;
         return std::vector<Node*>();
     }
 
@@ -135,7 +135,7 @@ float Heuristic(Node* a, Node* b)
 void DrawPath(std::vector<Node*> mapPath, Color lineColor)
 {
     for (size_t i = 1; i < mapPath.size(); i++) {
-        DrawLineV({mapPath[i]->position.x, mapPath[i]->position.y},
-            { mapPath[i - 1]->position.x, mapPath[i - 1]->position.y }, lineColor);
+        DrawLineEx({mapPath[i]->position.x, mapPath[i]->position.y},
+            { mapPath[i - 1]->position.x, mapPath[i - 1]->position.y }, 2, lineColor);
     }
 }

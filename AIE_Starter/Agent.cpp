@@ -2,6 +2,9 @@
 
 void Agent::Update(float deltaTime)
 {
+    if (isThinking) {
+        m_timer += deltaTime;
+    }
     if (m_current)
         m_current->Update(this, deltaTime);
     PathAgent::Update(deltaTime);
@@ -31,4 +34,9 @@ void Agent::SetTarget(Agent* _target)
 Agent* Agent::GetTarget()
 {
     return m_target;
+}
+
+float Agent::GetTimer()
+{
+    return m_timer;
 }

@@ -11,3 +11,10 @@ void FollowBehaviour::Update(Agent* agent, float deltaTime)
         agent->GoTo(lastTargetPosition);
     }
 }
+
+void FollowBehaviour::Enter(Agent* agent)
+{
+    std::cout << agent->GetName() << " : I KNOW WHERE YOU ARE!!" << std::endl;
+    agent->SetColor(RED);
+    agent->Reset();
+}

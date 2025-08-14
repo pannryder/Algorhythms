@@ -3,6 +3,7 @@
 #include <vector>
 #include "Node.h"
 #include "raylib.h"
+#include <string>
 
 class PathAgent {
 private:
@@ -12,6 +13,7 @@ private:
     float m_speed;
     std::vector<Node*> m_path;
     Color m_color;
+    std::string m_name;
 
 public:
     void Update(float deltaTime);
@@ -20,7 +22,9 @@ public:
     void SetSpeed(float speed);
     void Draw();
     void SetColor(Color _color);
+    void SetName(std::string _name);
     std::vector<Node*> GetPath();
     glm::vec2 GetPosition();
     void Reset();
+    std::string GetName();
 };

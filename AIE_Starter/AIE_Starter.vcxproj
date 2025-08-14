@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Agent.cpp" />
+    <ClCompile Include="DistanceCondition.cpp" />
     <ClCompile Include="FiniteStateMachine.cpp" />
     <ClCompile Include="FollowBehaviour.cpp" />
     <ClCompile Include="GotoPointBehaviour.cpp" />
@@ -149,7 +150,11 @@
     <ClCompile Include="NodeMap.cpp" />
     <ClCompile Include="PathAgent.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
+    <ClCompile Include="RunAwayBehaviour.cpp" />
     <ClCompile Include="SelectorBehaviour.cpp" />
+    <ClCompile Include="State.cpp" />
+    <ClCompile Include="ThinkingBehaviour.cpp" />
+    <ClCompile Include="TimerCondition.cpp" />
     <ClCompile Include="WanderBehaviour.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +163,8 @@
   <ItemGroup>
     <ClInclude Include="Agent.h" />
     <ClInclude Include="Behaviour.h" />
+    <ClInclude Include="Condition.h" />
+    <ClInclude Include="DistanceCondition.h" />
     <ClInclude Include="Edge.h" />
     <ClInclude Include="FiniteStateMachine.h" />
     <ClInclude Include="FollowBehaviour.h" />
@@ -166,7 +173,11 @@
     <ClInclude Include="NodeMap.h" />
     <ClInclude Include="PathAgent.h" />
     <ClInclude Include="Pathfinding.h" />
+    <ClInclude Include="RunAwayBehaviour.h" />
     <ClInclude Include="SelectorBehaviour.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="ThinkingBehaviour.h" />
+    <ClInclude Include="TimerCondition.h" />
     <ClInclude Include="WanderBehaviour.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

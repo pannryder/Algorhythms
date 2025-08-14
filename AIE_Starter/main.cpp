@@ -30,6 +30,10 @@
 #include "WanderBehaviour.h"
 #include "FollowBehaviour.h"
 #include "SelectorBehaviour.h"
+#include "ThinkingBehaviour.h"
+#include "FiniteStateMachine.h"
+#include "DistanceCondition.h"
+#include "TimerCondition.h"
 #include <string>
 
 int main(int argc, char* argv[])
@@ -37,12 +41,14 @@ int main(int argc, char* argv[])
     // Initialization
     //--------------------------------------------------------------------------------------
     int screenWidth = 800;
-    int screenHeight = 450;
+    int screenHeight = 800;
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "pathfinding and behaviours");
 
     SetTargetFPS(60);
     //--------------------------------------------------------------------------------------
+
+    // Map
 
     NodeMap nodeMap;
     std::vector<std::string> asciiMap;
@@ -59,23 +65,56 @@ int main(int argc, char* argv[])
     asciiMap.push_back("0111000011101111111101110");
     asciiMap.push_back("0101111010100100000100010");
     asciiMap.push_back("0110101111111111111111110");
+    asciiMap.push_back("0101110111000111000001110");
+    asciiMap.push_back("0101011101110101111111010");
+    asciiMap.push_back("0101000100000100010001010");
+    asciiMap.push_back("0101111111111111010001110");
+    asciiMap.push_back("0100100010000000011111010");
+    asciiMap.push_back("0111111111111110001001010");
+    asciiMap.push_back("0010010000000010001001000");
+    asciiMap.push_back("0111111111111011111111010");
+    asciiMap.push_back("0010000010001000010001010");
+    asciiMap.push_back("0111000011101111111101110");
+    asciiMap.push_back("0101111010100100000100010");
     asciiMap.push_back("0000000000000000000000000");
     nodeMap.Initialise(asciiMap,32);
 
     Node* start = nodeMap.GetNode(1, 1);
     Node* end = nodeMap.GetNode(10, 2);
-    //std::vector<Node*> nodeMapPath = dijkstrasSearch(start, end);
     std::vector<Node*> nodeMapPath = AStarSearch(start, end);
 
-    Agent agent(&nodeMap, new GotoPointBehaviour(), BROWN);
-    agent.SetNode(start);
-    agent.SetSpeed(500);
+    // Conditions
+    DistanceCondition* closerThan5 = new DistanceCondition(5.0f * nodeMap.GetCellSize(), true);
+    DistanceCondition* closerThan5ex = new DistanceCondition(5.0f * nodeMap.GetCellSize(), true);
+    DistanceCondition* furtherThan7 = new DistanceCondition(7.0f * nodeMap.GetCellSize(), false);
+    TimerCondition* timecond = new TimerCondition(2.0f);
 
-    Agent agent2(&nodeMap, new WanderBehaviour(), ORANGE);
+
+    // States
+    State* wanderState = new State(new WanderBehaviour());
+    State* followState = new State(new FollowBehaviour());
+    State* thinkingState = new State(new ThinkingBehaviour());
+    thinkingState->AddTransition(timecond, wanderState);
+    thinkingState->AddTransition(closerThan5, followState);
+    wanderState->AddTransition(closerThan5ex, followState);
+    followState->AddTransition(furtherThan7, thinkingState);
+
+    // State Machine
+    FiniteStateMachine* fsm = new FiniteStateMachine(wanderState);
+    fsm->AddState(wanderState);
+    fsm->AddState(followState);
+    fsm->AddState(thinkingState);
+
+    // Agents
+    Agent agent1(&nodeMap, new GotoPointBehaviour(), BROWN, "Frank");
+    agent1.SetNode(start);
+    agent1.SetSpeed(500);
+
+    Agent agent2(&nodeMap, new WanderBehaviour(), ORANGE, "George");
     agent2.SetNode(nodeMap.GetRandomNode());
     agent2.SetSpeed(300);
 
-    Agent agent3(&nodeMap, new SelectorBehaviour(new FollowBehaviour(), new WanderBehaviour()), PINK);
+    Agent agent3(&nodeMap, fsm, PINK, "Bob");
     agent3.SetNode(nodeMap.GetRandomNode());
     agent3.SetTarget(&agent2);
     agent3.SetSpeed(200);
@@ -100,12 +139,11 @@ int main(int argc, char* argv[])
         ClearBackground(LIGHTGRAY);
 
         nodeMap.Draw();
-        DrawPath(agent.GetPath(), YELLOW);
-        DrawPath(agent2.GetPath(), YELLOW);
-        DrawPath(agent3.GetPath(), YELLOW);
-        //DrawPath(agent.m_path, YELLOW);
-        agent.Update(deltaTime);
-        agent.Draw();
+        DrawPath(agent1.GetPath(), YELLOW);
+        DrawPath(agent2.GetPath(), ORANGE);
+        DrawPath(agent3.GetPath(), RED);
+        agent1.Update(deltaTime);
+        agent1.Draw();
         agent2.Update(deltaTime);
         agent2.Draw();
         agent3.Update(deltaTime);

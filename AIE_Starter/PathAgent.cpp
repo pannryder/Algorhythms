@@ -52,11 +52,17 @@ void PathAgent::SetSpeed(float speed)
 void PathAgent::Draw()
 {
     DrawCircleV({ m_position.x, m_position.y }, 8, m_color);
+    DrawText(m_name.c_str(),((int)m_position.x-15),((int)m_position.y+10),10,m_color);
 }
 
 void PathAgent::SetColor(Color _color)
 {
     m_color = _color;
+}
+
+void PathAgent::SetName(std::string _name)
+{
+    m_name = _name;
 }
 
 std::vector<Node*> PathAgent::GetPath()
@@ -72,4 +78,9 @@ glm::vec2 PathAgent::GetPosition()
 void PathAgent::Reset()
 {
     m_path.clear();
+}
+
+std::string PathAgent::GetName()
+{
+    return m_name;
 }

@@ -1,25 +1,5 @@
 #include "FiniteStateMachine.h"
 
-State::~State()
-{
-	for (Behaviour* b : m_behaviours)
-		delete b;
-
-	for (Transition t : m_transitions)
-		delete t.condition;
-}
-
-void State::Update(Agent* agent, float deltaTime)
-{
-	for (Behaviour* b : m_behaviours)
-		b->Update(agent, deltaTime);
-}
-
-std::vector<Transition> State::GetTransitions()
-{
-	return m_transitions;
-}
-
 FiniteStateMachine::~FiniteStateMachine()
 {
 	for (State* s : m_states)
@@ -36,5 +16,17 @@ void FiniteStateMachine::Update(Agent* agent, float deltaTime)
 		if (t.condition->IsTrue(agent))
 			newState = t.targetState;
 	}
+	if (newState != nullptr && newState != m_currentState)
+	{
+		m_currentState->Exit(agent);
+		m_currentState = newState;
+		m_currentState->Enter(agent);
+	}
 	m_currentState->Update(agent, deltaTime);
 }
+
+void FiniteStateMachine::Enter(Agent* agent)
+{
+	m_currentState->Enter(agent);
+}
+
