@@ -11,8 +11,9 @@ private:
     Behaviour* m_current;
     NodeMap* m_nodeMap;
     Agent* m_target = nullptr;
-    float m_timer;
+    float m_timer = 0;
     bool isThinking;
+    Node* dest = nullptr;
 public:
     Agent() {};
     Agent(NodeMap* _nodeMap, Behaviour* _behaviour, Color _color, std::string _name) : m_current(_behaviour), m_nodeMap(_nodeMap) { PathAgent::SetColor(_color); PathAgent::SetName(_name), m_current->Enter(this); };
@@ -26,4 +27,6 @@ public:
     void AgentIsThinking() { isThinking = true; };
     void AgentIsntThinking() { isThinking = false; m_timer = 0; };
     float GetTimer();
+    Node* GetDest() { return dest; };
+    void SetDest(Node* destin) { dest = destin; };
 };

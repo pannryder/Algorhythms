@@ -34,6 +34,18 @@
 #include "FiniteStateMachine.h"
 #include "DistanceCondition.h"
 #include "TimerCondition.h"
+
+#include "Adaptor.h"
+#include "Selector.h"
+#include "Sequence.h"
+#include "TreeWanderBehaviour.h"
+#include "TreeFollowBehaviour.h"
+#include "TreeThinkingBehaviour.h"
+#include "TreeDistanceCondition.h"
+#include "TreeTimerCondition.h"
+#include "TimeStart.h"
+#include "TimeStop.h"
+
 #include <string>
 
 int main(int argc, char* argv[])
@@ -83,27 +95,46 @@ int main(int argc, char* argv[])
     Node* end = nodeMap.GetNode(10, 2);
     std::vector<Node*> nodeMapPath = AStarSearch(start, end);
 
-    // Conditions
-    DistanceCondition* closerThan5 = new DistanceCondition(5.0f * nodeMap.GetCellSize(), true);
-    DistanceCondition* closerThan5ex = new DistanceCondition(5.0f * nodeMap.GetCellSize(), true);
-    DistanceCondition* furtherThan7 = new DistanceCondition(7.0f * nodeMap.GetCellSize(), false);
-    TimerCondition* timecond = new TimerCondition(2.0f);
+    //// Conditions
+    //DistanceCondition* closerThan5 = new DistanceCondition(5.0f * nodeMap.GetCellSize(), true);
+    //DistanceCondition* closerThan5ex = new DistanceCondition(5.0f * nodeMap.GetCellSize(), true);
+    //DistanceCondition* furtherThan7 = new DistanceCondition(7.0f * nodeMap.GetCellSize(), false);
+    //TimerCondition* timecond = new TimerCondition(2.0f);
 
 
-    // States
-    State* wanderState = new State(new WanderBehaviour());
-    State* followState = new State(new FollowBehaviour());
-    State* thinkingState = new State(new ThinkingBehaviour());
-    thinkingState->AddTransition(timecond, wanderState);
-    thinkingState->AddTransition(closerThan5, followState);
-    wanderState->AddTransition(closerThan5ex, followState);
-    followState->AddTransition(furtherThan7, thinkingState);
+    //// States
+    //State* wanderState = new State(new WanderBehaviour());
+    //State* followState = new State(new FollowBehaviour());
+    //State* thinkingState = new State(new ThinkingBehaviour());
+    //thinkingState->AddTransition(timecond, wanderState);
+    //thinkingState->AddTransition(closerThan5, followState);
+    //wanderState->AddTransition(closerThan5ex, followState);
+    //followState->AddTransition(furtherThan7, thinkingState);
 
-    // State Machine
-    FiniteStateMachine* fsm = new FiniteStateMachine(wanderState);
-    fsm->AddState(wanderState);
-    fsm->AddState(followState);
-    fsm->AddState(thinkingState);
+    //// State Machine
+    //FiniteStateMachine* fsm = new FiniteStateMachine(wanderState);
+    //fsm->AddState(wanderState);
+    //fsm->AddState(followState);
+    //fsm->AddState(thinkingState);
+
+    // Behaviour Tree
+    TreeDistanceCondition* Tree_closerThan5 = new TreeDistanceCondition(5.0f * nodeMap.GetCellSize(), true);
+    TreeDistanceCondition* Tree_furtherThan7 = new TreeDistanceCondition(7.0f * nodeMap.GetCellSize(), false);
+    TreeTimerCondition* Tree_timecond = new TreeTimerCondition(2.0f);
+
+    TreeWanderBehaviour* wanderBehave = new TreeWanderBehaviour();
+    TreeFollowBehaviour* followBehave = new TreeFollowBehaviour();
+    TreeThinkingBehaviour* thinkBehave = new TreeThinkingBehaviour();
+    TimeStart* timerStart = new TimeStart();
+    TimeStop* timerStop = new TimeStop();
+
+    Sequence* Branch_follow = new Sequence({ Tree_closerThan5, timerStop,followBehave });
+    Sequence* Branch_think = new Sequence({ Tree_furtherThan7, Tree_timecond, timerStart, thinkBehave });
+    Sequence* Branch_wander = new Sequence({ wanderBehave });
+
+    Selector* TheTree = new Selector({Branch_follow,Branch_think,Branch_wander});
+
+    Adaptor* TheDaptor = new Adaptor(TheTree);
 
     // Agents
     Agent agent1(&nodeMap, new GotoPointBehaviour(), BROWN, "Frank");
@@ -114,7 +145,7 @@ int main(int argc, char* argv[])
     agent2.SetNode(nodeMap.GetRandomNode());
     agent2.SetSpeed(300);
 
-    Agent agent3(&nodeMap, fsm, PINK, "Bob");
+    Agent agent3(&nodeMap, TheDaptor, PINK, "Bob");
     agent3.SetNode(nodeMap.GetRandomNode());
     agent3.SetTarget(&agent2);
     agent3.SetSpeed(200);
@@ -156,6 +187,5 @@ int main(int argc, char* argv[])
     //--------------------------------------------------------------------------------------   
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
-
     return 0;
 }

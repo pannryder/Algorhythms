@@ -151,18 +151,27 @@
     <ClCompile Include="PathAgent.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="RunAwayBehaviour.cpp" />
+    <ClCompile Include="Selector.cpp" />
     <ClCompile Include="SelectorBehaviour.cpp" />
+    <ClCompile Include="Sequence.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="ThinkingBehaviour.cpp" />
     <ClCompile Include="TimerCondition.cpp" />
+    <ClCompile Include="TreeDistanceCondition.cpp" />
+    <ClCompile Include="TreeFollowBehaviour.cpp" />
+    <ClCompile Include="TreeThinkingBehaviour.cpp" />
+    <ClCompile Include="TreeTimerCondition.cpp" />
+    <ClCompile Include="TreeWanderBehaviour.cpp" />
     <ClCompile Include="WanderBehaviour.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Adaptor.h" />
     <ClInclude Include="Agent.h" />
     <ClInclude Include="Behaviour.h" />
+    <ClInclude Include="Composite.h" />
     <ClInclude Include="Condition.h" />
     <ClInclude Include="DistanceCondition.h" />
     <ClInclude Include="Edge.h" />
@@ -174,10 +183,20 @@
     <ClInclude Include="PathAgent.h" />
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="RunAwayBehaviour.h" />
+    <ClInclude Include="Selector.h" />
     <ClInclude Include="SelectorBehaviour.h" />
+    <ClInclude Include="Sequence.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="ThinkingBehaviour.h" />
     <ClInclude Include="TimerCondition.h" />
+    <ClInclude Include="TimeStart.h" />
+    <ClInclude Include="TimeStop.h" />
+    <ClInclude Include="TreeBehaviour.h" />
+    <ClInclude Include="TreeDistanceCondition.h" />
+    <ClInclude Include="TreeFollowBehaviour.h" />
+    <ClInclude Include="TreeThinkingBehaviour.h" />
+    <ClInclude Include="TreeTimerCondition.h" />
+    <ClInclude Include="TreeWanderBehaviour.h" />
     <ClInclude Include="WanderBehaviour.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
